@@ -17,7 +17,7 @@ impl AnilistClient {
                 }
     }
     pub async fn request_user_info (&self, user_name: &str) -> serde_json::Value  {
-        let query = json! (
+        let query: serde_json::Value = json! (
             {
                 "query": Queries::USERLISTINFOQUERY,
                 "variables": {
@@ -26,6 +26,9 @@ impl AnilistClient {
             }
         );
         println!("Username: {}", &query);
+       self. make_request(query).await
+    }
+    async fn make_request(&self, query: serde_json::Value) -> serde_json::Value {
         let results: String = self.client
         .post(URL)
         .header("Content-Type", "application/json")
