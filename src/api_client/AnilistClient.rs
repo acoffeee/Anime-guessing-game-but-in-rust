@@ -1,4 +1,5 @@
 use super::rate_limiter::rate_limiter::Limiter;
+use json::JsonValue;
 use reqwest::Client;
 use serde_json::json;
 use std::collections::HashMap;
@@ -15,16 +16,17 @@ impl AnilistClient {
             client: reqwest::Client::new()
                 }
     }
-    pub async fn request_user_info (&self, user_name: String)  {
+    pub async fn request_user_info (&self, user_name: &str) -> serde_json::Value  {
         let query = json! (
             {
-                "query": Queries::USERLISTGUESSINGQUERY,
+                "query": Queries::USERLISTINFOQUERY,
                 "variables": {
                     "userName": &user_name
                 }
             }
         );
-        let contents: String = self.client
+        println!("Username: {}", &query);
+        let results: String = self.client
         .post(URL)
         .header("Content-Type", "application/json")
         .header("Accept", "application/json")
@@ -35,8 +37,7 @@ impl AnilistClient {
         .text()
         .await
         .expect("JSON");
-        println!("Done");
-        println!("this is the query {}", Queries::USERLISTGUESSINGQUERY);
-        println!("cnts {}", contents);
+        let content = serde_json::from_str(&results.as_str()).unwrap();
+        content
     }
 }

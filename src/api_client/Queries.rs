@@ -28,7 +28,29 @@ query ($userName: String)
   }
 }
 ";
-
+pub const ANIMEINFORMATIONQUERY: &str = "
+query($id: Int)
+{
+  Media(id: $id)
+  {
+    id
+    season
+    seasonYear
+    format
+    genres
+    tags {
+      name
+      rank
+    }
+    averageScore
+    source
+    title {
+      romaji
+      english
+    }
+  }
+}
+";
 
 pub const USERIDQUERY: &str = "
 query ($userName: String)
